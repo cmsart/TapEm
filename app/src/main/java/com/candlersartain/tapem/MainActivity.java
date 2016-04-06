@@ -1,9 +1,8 @@
 package com.candlersartain.tapem;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,14 +12,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    Drawable right = new ColorDrawable(0xFF00FF00);
-    Drawable def = new ColorDrawable(0xFFFFFFFF);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +28,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Button btnStart = (Button) findViewById(R.id.start);
-        final Button btnLeft = (Button) findViewById(R.id.b1);
-        final Button btnRight = (Button) findViewById(R.id.b2);
+        final Button btnStart = (Button) findViewById(R.id.start); //start button
 
-        final ArrayList<Button> buttons = new ArrayList<Button>();
-        buttons.add(btnLeft);
-        buttons.add(btnRight);
+        //buttons for game GUI
+        ImageView btn1 = (ImageView) findViewById(R.id.btn1);
+        ImageView btn2 = (ImageView) findViewById(R.id.btn2);
+        ImageView btn3 = (ImageView) findViewById(R.id.btn3);
+        ImageView btn4 = (ImageView) findViewById(R.id.btn4);
+        ImageView btn5 = (ImageView) findViewById(R.id.btn5);
+        ImageView btn6 = (ImageView) findViewById(R.id.btn6);
+        ImageView btn7 = (ImageView) findViewById(R.id.btn7);
+        ImageView btn8 = (ImageView) findViewById(R.id.btn8);
+        ImageView btn9 = (ImageView) findViewById(R.id.btn9);
 
         assert btnStart != null;
         btnStart.setOnClickListener(new View.OnClickListener()
@@ -43,28 +47,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                setActiveButton(v, buttons);
+                int active = getRandom();
+                ImageView clickedButton = (ImageView) findViewById(active);
+                clickedButton.setTag("active");
+                clickedButton.setImageResource(R.drawable.active_square);
             }
         });
     }
 
-    public void setActiveButton (View v, ArrayList<Button>buttons){
-        double rand = Math.random() * 1;
-        rand = Math.round(rand);
-        buttons.get((int)rand).setBackground(right);
+    public void checkTap(View v) {
+        //TextView scoreDisplay = (TextView) findViewById(R.id.scoreNum);
+        //int scoreNum = Integer.parseInt(scoreDisplay.getText().toString());
+
+        ImageView currentButton = (ImageView) findViewById(v.getId());
+
+        if(currentButton.getTag() == "active"){
+
+            currentButton.setImageResource(R.drawable.default_square);
+            currentButton.setTag(null);
+
+            int active = getRandom();
+            ImageView nextActiveButton = (ImageView) findViewById(active);
+            nextActiveButton.setTag("active");
+            nextActiveButton.setImageResource(R.drawable.active_square);
+        }
     }
 
-    public void checkTap(View v){
-        TextView scoreDisplay = (TextView) findViewById(R.id.scoreNum);
-        int scoreNum = Integer.parseInt(scoreDisplay.getText().toString());
+    public int getRandom (){
+        Random r = new Random();
+        int rand = r.nextInt((2131492978 - 2131492970) + 1) + 2131492970;
 
-        if(v.getBackground() == right){
-            scoreNum++;
-            String score = Integer.toString(scoreNum);
-            scoreDisplay.setText(score);
-
-            v.setBackground(def);
-        }
+        return rand;
     }
 
     @Override

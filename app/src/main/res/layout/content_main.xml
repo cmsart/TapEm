@@ -21,38 +21,85 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:layout_width="150px"
-        android:layout_height="150px"
-        android:id="@+id/b1"
-        android:layout_marginTop="100dp"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn1"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/start"
-        android:background="#ff0000"
-        android:onClick="checkTap"/>
+        android:layout_toStartOf="@+id/start" />
 
-    <Button
-        android:layout_width="150px"
-        android:layout_height="150px"
-        android:id="@+id/b2"
-        android:layout_alignTop="@+id/b1"
-        android:layout_toEndOf="@+id/start"
-        android:background="#ff0000"
-        android:onClick="checkTap"/>
-
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: "
-        android:id="@+id/scoreText"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/start"/>
+        android:id="@+id/btn2"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_alignTop="@+id/btn1"
+        android:layout_toEndOf="@+id/btn1" />
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
-        android:id="@+id/scoreNum"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/scoreText"/>
+        android:id="@+id/btn3"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_alignTop="@+id/btn2"
+        android:layout_toEndOf="@+id/btn2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn4"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_below="@+id/btn1"
+        android:layout_alignStart="@+id/btn1" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn5"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_alignTop="@+id/btn4"
+        android:layout_alignStart="@+id/btn2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn6"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_alignTop="@+id/btn5"
+        android:layout_toEndOf="@+id/btn5" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn7"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_below="@+id/btn4"
+        android:layout_alignStart="@+id/btn4" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn8"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_below="@+id/btn4"
+        android:layout_toEndOf="@+id/btn4" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn9"
+        android:src="@drawable/default_square"
+        android:onClick="checkTap"
+        android:layout_below="@+id/btn6"
+        android:layout_toEndOf="@+id/btn5" />
 </RelativeLayout>
