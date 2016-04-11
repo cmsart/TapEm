@@ -102,4 +102,15 @@
         android:onClick="checkTap"
         android:layout_below="@+id/btn6"
         android:layout_toEndOf="@+id/btn5" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/player1"
+        android:layout_above="@+id/start"
+        android:layout_alignStart="@+id/btn7"
+        android:layout_alignEnd="@+id/btn9"
+        android:background="#cbcbcb"
+        android:max="25" />
+
 </RelativeLayout>

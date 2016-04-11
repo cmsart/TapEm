@@ -1,25 +1,41 @@
 package com.candlersartain.tapem;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static int score;
+    Random r = new Random();
+
+    private String serverIpAddress = "104.131.40.244";
+    public static Socket socket;
+
+    private Handler mHandler = new Handler();
+
+    ProgressBar bar1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+         bar1 = (ProgressBar) findViewById(R.id.player1);
+
         final Button btnStart = (Button) findViewById(R.id.start); //start button
+        score = 0;
 
         //buttons for game GUI
         ImageView btn1 = (ImageView) findViewById(R.id.btn1);
@@ -42,17 +61,43 @@ public class MainActivity extends AppCompatActivity {
         ImageView btn9 = (ImageView) findViewById(R.id.btn9);
 
         assert btnStart != null;
-        btnStart.setOnClickListener(new View.OnClickListener()
-        {
+        btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                int active = getRandom();
-                ImageView clickedButton = (ImageView) findViewById(active);
+            public void onClick(View v) {
+                ImageView clickedButton = (ImageView) findViewById(r.nextInt((2131492978 - 2131492970) + 1) + 2131492970);
                 clickedButton.setTag("active");
                 clickedButton.setImageResource(R.drawable.active_square);
             }
         });
+
+        //Open socket
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
+                    Log.d("ClientActivity", "C: Connecting...");
+                    socket = new Socket(serverAddr, 6969);
+                } catch (Exception e) {
+                    Log.e("ClientActivity", "C: Error", e);
+                }
+            }
+        }).start();
+
+        //start progress bar
+        new Thread(new Runnable() {
+            public void run() {
+                while (score < 25) {
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            bar1.setProgress(score);
+                        }
+                    });
+                }
+            }
+        }).start();
+
+        assert socket != null;
+        new UpdateTask().execute();
     }
 
     public void checkTap(View v) {
@@ -66,18 +111,14 @@ public class MainActivity extends AppCompatActivity {
             currentButton.setImageResource(R.drawable.default_square);
             currentButton.setTag(null);
 
-            int active = getRandom();
-            ImageView nextActiveButton = (ImageView) findViewById(active);
-            nextActiveButton.setTag("active");
-            nextActiveButton.setImageResource(R.drawable.active_square);
+            ImageView nextActiveButton = (ImageView) findViewById(r.nextInt((2131492978 - 2131492970) + 1) + 2131492970);
+            if (nextActiveButton != null) {
+                nextActiveButton.setTag("active");
+                nextActiveButton.setImageResource(R.drawable.active_square);
+            }
+
+            score++;
         }
-    }
-
-    public int getRandom (){
-        Random r = new Random();
-        int rand = r.nextInt((2131492978 - 2131492970) + 1) + 2131492970;
-
-        return rand;
     }
 
     @Override
@@ -101,4 +142,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
