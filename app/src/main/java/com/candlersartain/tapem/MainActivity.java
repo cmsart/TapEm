@@ -1,41 +1,28 @@
 package com.candlersartain.tapem;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     public static int score;
-    Random r = new Random();
+    public static boolean active;
+    public static ProgressBar bar1;
+    public static TextView scoreDisplay;
 
-    private String serverIpAddress = "104.131.40.244";
-    public static Socket socket;
-
-    private Handler mHandler = new Handler();
-
-    ProgressBar bar1;
+    private Random r = new Random();
+    private ArrayList<ImageView> buttons;
+    private int current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +31,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-         bar1 = (ProgressBar) findViewById(R.id.player1);
+        bar1 = (ProgressBar) findViewById(R.id.player1);
+        scoreDisplay = (TextView) findViewById(R.id.scoreView);
 
-        final Button btnStart = (Button) findViewById(R.id.start); //start button
         score = 0;
+        active = true;
 
         //buttons for game GUI
         ImageView btn1 = (ImageView) findViewById(R.id.btn1);
@@ -60,64 +48,63 @@ public class MainActivity extends AppCompatActivity {
         ImageView btn8 = (ImageView) findViewById(R.id.btn8);
         ImageView btn9 = (ImageView) findViewById(R.id.btn9);
 
-        assert btnStart != null;
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView clickedButton = (ImageView) findViewById(r.nextInt((2131492978 - 2131492970) + 1) + 2131492970);
-                clickedButton.setTag("active");
-                clickedButton.setImageResource(R.drawable.active_square);
-            }
-        });
+        //arraylist to keep track of button state
+        buttons = new ArrayList<>();
+        buttons.add(btn1);
+        buttons.add(btn2);
+        buttons.add(btn3);
+        buttons.add(btn4);
+        buttons.add(btn5);
+        buttons.add(btn6);
+        buttons.add(btn7);
+        buttons.add(btn8);
+        buttons.add(btn9);
 
-        //Open socket
+        //set first active square
+        current = r.nextInt(9);
+        buttons.get(current).setTag("active");
+        buttons.get(current).setImageResource(R.drawable.active_square);
+
+        //start server communication loop
         new Thread(new Runnable() {
             public void run() {
-                try {
-                    InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
-                    Log.d("ClientActivity", "C: Connecting...");
-                    socket = new Socket(serverAddr, 6969);
-                } catch (Exception e) {
-                    Log.e("ClientActivity", "C: Error", e);
+                while (active) {
+                    try{
+                        new UpdateTask().execute();
+                        Thread.sleep(200);
+                    } catch(InterruptedException e){
+                        //error
+                    }
                 }
             }
         }).start();
 
-        //start progress bar
-        new Thread(new Runnable() {
-            public void run() {
-                while (score < 25) {
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            bar1.setProgress(score);
-                        }
-                    });
-                }
-            }
-        }).start();
-
-        assert socket != null;
-        new UpdateTask().execute();
     }
 
+    //check to see if the tapped square is active, if so, increment score
     public void checkTap(View v) {
-        //TextView scoreDisplay = (TextView) findViewById(R.id.scoreNum);
-        //int scoreNum = Integer.parseInt(scoreDisplay.getText().toString());
 
-        ImageView currentButton = (ImageView) findViewById(v.getId());
+        if(v.getTag() == "active"){
 
-        if(currentButton.getTag() == "active"){
+            //set the clicked button back to default state and remove tag
+            buttons.get(current).setImageResource(R.drawable.default_square);
+            buttons.get(current).setTag(null);
 
-            currentButton.setImageResource(R.drawable.default_square);
-            currentButton.setTag(null);
+            int prev = current;
+            current = r.nextInt(9);
 
-            ImageView nextActiveButton = (ImageView) findViewById(r.nextInt((2131492978 - 2131492970) + 1) + 2131492970);
-            if (nextActiveButton != null) {
-                nextActiveButton.setTag("active");
-                nextActiveButton.setImageResource(R.drawable.active_square);
+            //make sure the same square is not repeated
+            while(current == prev){
+                current = r.nextInt(9);
             }
 
+            //set a new active button
+            buttons.get(current).setTag("active");
+            buttons.get(current).setImageResource(R.drawable.active_square);
+
+            //increment score and update score display
             score++;
+            scoreDisplay.setText("Score: " + score);
         }
     }
 

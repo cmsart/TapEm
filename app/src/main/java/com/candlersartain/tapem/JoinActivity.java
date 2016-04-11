@@ -22,10 +22,6 @@ import java.net.Socket;
 
 public class JoinActivity extends AppCompatActivity {
 
-
-
-    Handler mHandler;
-    //private Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +30,7 @@ public class JoinActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Button join = (Button) findViewById(R.id.joinBtn);
-        join.setOnClickListener(connectListener);
+        join.setOnClickListener(connectListener); //starts the MainActivity
     }
 
     private View.OnClickListener connectListener = new View.OnClickListener() {
