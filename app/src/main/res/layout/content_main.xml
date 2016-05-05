@@ -16,10 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn1"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="65dp"
         android:src="@drawable/default_square"
         android:onClick="checkTap"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentBottom="false"
+        android:layout_marginLeft="15dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -105,14 +109,26 @@
         android:layout_marginTop="26dp"
         android:layout_alignStart="@+id/btn7" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:id="@+id/player2"
+        android:background="#cbcbcb"
+        android:max="25"
+        android:layout_below="@+id/player1"
+        android:layout_alignEnd="@+id/player1"
+        android:layout_marginTop="25px"
+        android:layout_alignStart="@+id/player1" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Score: 0"
         android:id="@+id/scoreView"
-        android:layout_below="@+id/player1"
-        android:layout_toStartOf="@+id/btn9"
-        android:layout_marginTop="33dp" />
+        android:layout_below="@+id/player2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>

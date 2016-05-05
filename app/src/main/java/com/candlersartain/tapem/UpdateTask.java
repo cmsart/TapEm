@@ -4,26 +4,24 @@
 package com.candlersartain.tapem;
 
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class UpdateTask extends AsyncTask<Void, Integer, String>{
+public class UpdateTask extends AsyncTask<Void, String, String>{
 
     private static Socket socket;
     private String incoming;
     ProgressBar bar = MainActivity.bar1;
+    ProgressBar bar2 = MainActivity.bar2;
     TextView scoreDisplay = MainActivity.scoreDisplay;
 
     @Override
@@ -32,11 +30,12 @@ public class UpdateTask extends AsyncTask<Void, Integer, String>{
         String serverIpAddress = "104.131.40.244";
         PrintWriter out;
         BufferedReader in;
+
         try {
             //check to see if there is already an initialized socket
             if(socket == null){
                 InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
-                socket = new Socket(serverAddr, 6969);
+                socket = new Socket(serverAddr, 1234);
             }
 
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
@@ -45,11 +44,9 @@ public class UpdateTask extends AsyncTask<Void, Integer, String>{
             out.println(MainActivity.score); //post score to server
             incoming = in.readLine(); //get latest score from server
 
-            //send the score received from server to onProgressUpdate
-            if (incoming != null){
-                publishProgress(Integer.parseInt(incoming));
+            if(incoming != null){
+                publishProgress(incoming); //send the score received from server to onProgressUpdate
             }
-            //Log.d("UpdateTask", "Server response: " + incoming);
         } catch (Exception e) {
             Log.e("UpdateTask", "S: Error", e);
         }
@@ -58,23 +55,37 @@ public class UpdateTask extends AsyncTask<Void, Integer, String>{
     }
 
     @Override
-    protected void onProgressUpdate(Integer... scores){
+    protected void onProgressUpdate(String... scores){
         super.onProgressUpdate(scores);
-        int s = scores[0];
+        String[] s = scores[0].split(" ");
 
-        //if a winner has been reached, end server communication thread and close the socket
-        if(s >= 25){
-            //Log.d("UpdateTask", "Score limit reached.");
+        int s1 = Integer.parseInt(s[0]);
+        int s2 = Integer.parseInt(s[1]);
+
+        bar.setProgress(s1); //if no winner, update the progress bar
+        bar2.setProgress(s2);
+    }
+
+    protected void onPostExecute(String result) {
+        int bar1progress = bar.getProgress();
+        int bar2progress = bar2.getProgress();
+
+        if(bar1progress >= 25){
+            WinnerActivity.win = 1;
             MainActivity.active = false;
-            scoreDisplay.setText("You win!");
             try{
                 socket.close();
             } catch(Exception e){
                 Log.e("UpdateTask", "Could not close socket.");
             }
-        }
-        else {
-            bar.setProgress(s); //if no winner, update the progress bar
+        } else if(bar2progress >= 25){
+            WinnerActivity.win = 2;
+            MainActivity.active = false;
+            try{
+                socket.close();
+            } catch(Exception e){
+                Log.e("UpdateTask", "Could not close socket.");
+            }
         }
     }
 }

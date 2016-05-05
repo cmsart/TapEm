@@ -2,4 +2,7 @@
     <string name="app_name">TapEm</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_join">JoinActivity</string>
+    <string name="title_activity_winner">WinnerActivity</string>
+    <string name="p1_win">Congratulations Player 1!</string>
+    <string name="p2_win">Congratulations Player 2!</string>
 </resources>
