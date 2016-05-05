@@ -1,6 +1,7 @@
 package com.candlersartain.tapem;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public static int score;
     public static boolean active;
     public static ProgressBar bar1;
+    public static ProgressBar bar2;
     public static TextView scoreDisplay;
 
     private Random r = new Random();
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         bar1 = (ProgressBar) findViewById(R.id.player1);
+        bar2 = (ProgressBar) findViewById(R.id.player2);
         scoreDisplay = (TextView) findViewById(R.id.scoreView);
 
         score = 0;
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                         //error
                     }
                 }
+                Intent intent = new Intent(MainActivity.this.getApplicationContext(), WinnerActivity.class);
+                startActivity(intent);
             }
         }).start();
 
