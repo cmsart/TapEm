@@ -22,7 +22,6 @@ public class UpdateTask extends AsyncTask<Void, String, String>{
     private String incoming;
     ProgressBar bar = MainActivity.bar1;
     ProgressBar bar2 = MainActivity.bar2;
-    TextView scoreDisplay = MainActivity.scoreDisplay;
 
     @Override
     protected String doInBackground(Void...params) {
@@ -42,13 +41,13 @@ public class UpdateTask extends AsyncTask<Void, String, String>{
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             out.println(MainActivity.score); //post score to server
-            incoming = in.readLine(); //get latest score from server
+            incoming = in.readLine(); //get latest scores from server
 
             if(incoming != null){
                 publishProgress(incoming); //send the score received from server to onProgressUpdate
             }
         } catch (Exception e) {
-            Log.e("UpdateTask", "S: Error", e);
+            Log.e("UpdateTask", "Error initializing socket and/or I/O", e);
         }
 
         return incoming;
@@ -76,7 +75,7 @@ public class UpdateTask extends AsyncTask<Void, String, String>{
             try{
                 socket.close();
             } catch(Exception e){
-                Log.e("UpdateTask", "Could not close socket.");
+                Log.e("UpdateTask", "Could not close socket.", e);
             }
         } else if(bar2progress >= 25){
             WinnerActivity.win = 2;
@@ -84,7 +83,7 @@ public class UpdateTask extends AsyncTask<Void, String, String>{
             try{
                 socket.close();
             } catch(Exception e){
-                Log.e("UpdateTask", "Could not close socket.");
+                Log.e("UpdateTask", "Could not close socket.", e);
             }
         }
     }

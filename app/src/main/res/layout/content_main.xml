@@ -118,8 +118,9 @@
         android:max="25"
         android:layout_below="@+id/player1"
         android:layout_alignEnd="@+id/player1"
-        android:layout_marginTop="25px"
-        android:layout_alignStart="@+id/player1" />
+        android:layout_marginTop="30px"
+        android:layout_alignStart="@+id/player1"
+        android:progressTint="#0092d1" />
 
     <TextView
         android:layout_width="wrap_content"
